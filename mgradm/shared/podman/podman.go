@@ -99,30 +99,39 @@ func GenerateServerSystemdService(mirrorPath string, debug bool) error {
 	}
 
 	data := templates.PodmanServiceTemplateData{
-		Volumes:            volumes,
-		NamePrefix:         "uyuni",
-		Args:               strings.Join(args, " "),
-		Ports:              ports,
-		Network:            podman.UyuniNetwork,
-		CaSecret:           podman.CASecret,
-		CaPath:             ssl.CAContainerPath,
-		CertSecret:         podman.SSLCertSecret,
-		CertPath:           ssl.ServerCertPath,
-		KeySecret:          podman.SSLKeySecret,
-		KeyPath:            ssl.ServerCertKeyPath,
-		DBCaSecret:         podman.DBCASecret,
-		DBCaPath:           ssl.DBCAContainerPath,
-		AdminUserSecret:    podman.AdminUserSecret,
-		AdminPassSecret:    podman.AdminPassSecret,
-		DBUserSecret:       podman.DBUserSecret,
-		DBPassSecret:       podman.DBPassSecret,
-		ReportDBUserSecret: podman.ReportDBUserSecret,
-		ReportDBPassSecret: podman.ReportDBPassSecret,
-		ServerEnvFile:      podman.GetServiceConfPath("uyuni-server", podman.ServerEnvironmentFile),
+		Volumes:       volumes,
+		NamePrefix:    "uyuni",
+		Args:          strings.Join(args, " "),
+		Ports:         ports,
+		Network:       podman.UyuniNetwork,
+		CaSecret:      podman.CASecret,
+		CaPath:        ssl.CAContainerPath,
+		CertSecret:    podman.SSLCertSecret,
+		CertPath:      ssl.ServerCertPath,
+		KeySecret:     podman.SSLKeySecret,
+		KeyPath:       ssl.ServerCertKeyPath,
+		DBCaSecret:    podman.DBCASecret,
+		DBCaPath:      ssl.DBCAContainerPath,
+		ServerEnvFile: podman.GetServiceConfPath("uyuni-server", podman.ServerEnvironmentFile),
 	}
 	if podman.HasSecret(podman.SCCUserSecret) {
 		data.SCCUserSecret = podman.SCCUserSecret
 		data.SCCPassSecret = podman.SCCPassSecret
+	}
+
+	if podman.HasSecret(podman.AdminUserSecret) {
+		data.AdminUserSecret = podman.AdminUserSecret
+		data.AdminPassSecret = podman.AdminPassSecret
+	}
+
+	if podman.HasSecret(podman.DBUserSecret) {
+		data.DBUserSecret = podman.DBUserSecret
+		data.DBPassSecret = podman.DBPassSecret
+	}
+
+	if podman.HasSecret(podman.ReportDBUserSecret) {
+		data.ReportDBUserSecret = podman.ReportDBUserSecret
+		data.ReportDBPassSecret = podman.ReportDBPassSecret
 	}
 
 	if err := utils.WriteTemplateToFile(data, podman.GetServicePath("uyuni-server"), 0444, true); err != nil {
