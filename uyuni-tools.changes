@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Apr 20 17:56:22 CEST 2026 - michael.calmer@suse.com
+
+- version 5.2.7-0
+  * Do not require admin secrets on upgrades
+    (bsc#1262409)
+
+-------------------------------------------------------------------
 Fri Apr 17 14:48:25 CEST 2026 - michael.calmer@suse.com
 
 - version 5.2.6-0
