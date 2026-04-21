@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Apr 21 13:40:30 CEST 2026 - michael.calmer@suse.com
+
+- version 5.2.8-0
+  * Generate service template only after secrets are created
+
+-------------------------------------------------------------------
 Mon Apr 20 17:56:22 CEST 2026 - michael.calmer@suse.com
 
 - version 5.2.7-0
