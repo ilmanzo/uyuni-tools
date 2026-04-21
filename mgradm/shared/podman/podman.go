@@ -155,14 +155,14 @@ func GenerateSystemdService(
 	}
 
 	// Add the SCC and admin credentials as secrets
-	if err := podman.CreateCredentialsSecretsIfMissing(
+	if err := podman.CreateCredentialsSecrets(
 		podman.AdminUserSecret, flags.Admin.Login, podman.AdminPassSecret, flags.Admin.Password,
 	); err != nil {
 		return err
 	}
 
 	if flags.SCC.User != "" {
-		if err := podman.CreateCredentialsSecretsIfMissing(
+		if err := podman.CreateCredentialsSecrets(
 			podman.SCCUserSecret, flags.SCC.User, podman.SCCPassSecret, flags.SCC.Password,
 		); err != nil {
 			return err
