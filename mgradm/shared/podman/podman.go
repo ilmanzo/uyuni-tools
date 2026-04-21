@@ -154,6 +154,21 @@ func GenerateSystemdService(
 		return utils.Errorf(err, L("cannot setup network"))
 	}
 
+	// Add the SCC and admin credentials as secrets
+	if err := podman.CreateCredentialsSecrets(
+		podman.AdminUserSecret, flags.Admin.Login, podman.AdminPassSecret, flags.Admin.Password,
+	); err != nil {
+		return err
+	}
+
+	if flags.SCC.User != "" {
+		if err := podman.CreateCredentialsSecrets(
+			podman.SCCUserSecret, flags.SCC.User, podman.SCCPassSecret, flags.SCC.Password,
+		); err != nil {
+			return err
+		}
+	}
+
 	log.Info().Msg(L("Enabling system service"))
 	if err := GenerateServerSystemdService(mirrorPath, flags.Debug.Java); err != nil {
 		return err
@@ -163,21 +178,6 @@ func GenerateSystemdService(
 		"Environment=UYUNI_IMAGE="+image, true,
 	); err != nil {
 		return utils.Errorf(err, L("cannot generate systemd conf file"))
-	}
-
-	// Add the SCC and admin credentials as secrets
-	if err := podman.CreateCredentialsSecretsIfMissing(
-		podman.AdminUserSecret, flags.Admin.Login, podman.AdminPassSecret, flags.Admin.Password,
-	); err != nil {
-		return err
-	}
-
-	if flags.SCC.User != "" {
-		if err := podman.CreateCredentialsSecretsIfMissing(
-			podman.SCCUserSecret, flags.SCC.User, podman.SCCPassSecret, flags.SCC.Password,
-		); err != nil {
-			return err
-		}
 	}
 
 	config := fmt.Sprintf("Environment=\"PODMAN_EXTRA_ARGS=%s\"", strings.Join(podmanArgs, " "))
