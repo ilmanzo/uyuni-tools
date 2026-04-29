@@ -1,2 +1,0 @@
-- Do not stop container on health check failure
-  Temporary workaround for bsc#1263157
